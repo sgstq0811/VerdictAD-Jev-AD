@@ -6,7 +6,7 @@ Shangquan Sun<sup>1</sup>, Wenjun Luo<sup>1</sup>, Yuanzhi Wang<sup>1</sup>, Rui
 
 <sup>1</sup>Nanyang Technological University &nbsp; <sup>2</sup>Michigan State University &nbsp; <sup>3</sup>University of Michigan
 
-[![Paper](https://img.shields.io/badge/Paper-coming%20soon-b31b1b)](#-citation)
+[![Paper](https://img.shields.io/badge/Paper-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white)](VerdictAD.pdf)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](requirements.txt)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.11-EE4C2C?logo=pytorch&logoColor=white)](requirements.txt)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](LICENSE)
