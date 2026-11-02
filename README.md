@@ -2,11 +2,8 @@
 
 # VerdictAD: Few-Shot Anomaly Detection via Decision-Guided Refinement
 
-Shangquan Sun<sup>1</sup>, Wenjun Luo<sup>1</sup>, Yuanzhi Wang<sup>1</sup>, Ruiqi Li<sup>1</sup>, Ruoyu Chen<sup>2</sup>, Jiachen Liu<sup>3</sup>, Shijian Lu<sup>1</sup>
-
-<sup>1</sup>Nanyang Technological University &nbsp; <sup>2</sup>Michigan State University &nbsp; <sup>3</sup>University of Michigan
-
 [![Paper](https://img.shields.io/badge/Paper-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white)](VerdictAD.pdf)
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-VerdictAD-ffd21e)](https://huggingface.co/datasets/sunsean/VerdictAD)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](requirements.txt)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.11-EE4C2C?logo=pytorch&logoColor=white)](requirements.txt)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](LICENSE)
@@ -24,7 +21,7 @@ Detecting defects in real-world industrial inspection often requires learning fr
 
 ## 🚀 News
 
-- **2026.11** Code and experiment logs released.
+- **2026.11** Code, experiment logs and [decision cache](https://huggingface.co/datasets/sunsean/VerdictAD) released.
 
 ## 📊 Results
 
@@ -91,7 +88,7 @@ python evaluate.py $RUN runs/jev_mvtec_k4_s42 --subspacead SubspaceAD
 python evaluate.py runs/dino_mvtec_k4_s42 runs/jev_mvtec_k4_s42 --subspacead SubspaceAD
 ```
 
-The decisions depend only on the query and its references, so one `decide.py` output serves every detector that uses those references. `--alpha`, `--gamma` and `--windows crop|box|merged` reproduce the ablations.
+The decisions depend only on the query and its references, so one `decide.py` output serves every detector that uses those references. The decisions for all 27 runs in the paper are on [Hugging Face](https://huggingface.co/datasets/sunsean/VerdictAD); `evaluate.py` reads them directly, so step 2 can be skipped. `--alpha`, `--gamma` and `--windows crop|box|merged` reproduce the ablations.
 
 **AnomalyDINO** is scored with its own metric code. Apply `patches/anomalydino.patch` to [AnomalyDINO](https://github.com/dammsi/AnomalyDINO), then run:
 
