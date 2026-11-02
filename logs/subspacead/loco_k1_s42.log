@@ -1,0 +1,9 @@
+Using device: cuda
+breakfast_box {'ia0': 75.61, 'ia1': 85.88, 'ip0': 86.74, 'ip1': 92.84, 'pa0': 85.62, 'pa1': 88.8, 'pro0': 76.53, 'pro1': 80.01}
+juice_bottle {'ia0': 52.84, 'ia1': 62.37, 'ip0': 76.5, 'ip1': 81.96, 'pa0': 88.39, 'pa1': 88.76, 'pro0': 74.03, 'pro1': 73.45}
+pushpins {'ia0': 63.09, 'ia1': 68.97, 'ip0': 74.25, 'ip1': 77.95, 'pa0': 71.17, 'pa1': 74.18, 'pro0': 55.11, 'pro1': 56.82}
+screw_bag {'ia0': 68.77, 'ia1': 72.14, 'ip0': 82.06, 'ip1': 84.7, 'pa0': 68.11, 'pa1': 69.75, 'pro0': 66.87, 'pro1': 68.37}
+splicing_connectors {'ia0': 66.52, 'ia1': 70.78, 'ip0': 77.89, 'ip1': 81.19, 'pa0': 75.63, 'pa1': 77.83, 'pro0': 73.92, 'pro1': 73.2}
+MEAN over 5 classes (Image AUROC / Image AUPR / Pixel AUROC / AUPRO)
+  SubspaceAD             65.37 / 79.49 / 77.78 / 69.29
+  + decision layer       72.03 / 83.73 / 79.86 / 70.37
