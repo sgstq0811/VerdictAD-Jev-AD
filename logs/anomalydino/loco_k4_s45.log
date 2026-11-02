@@ -1,0 +1,16 @@
+== image
+LOCO exponent 0.0: Image AUROC 67.71  Image AUPR 77.34  (5 classes)
+LOCO exponent 0.5: Image AUROC 75.11  Image AUPR 83.12  (5 classes)
+== pixel gamma 0
+breakfast_box 88.99 78.89
+juice_bottle 87.51 78.02
+pushpins 77.26 53.37
+screw_bag 73.53 45.0
+splicing_connectors 79.75 42.54
+== pixel gamma 0.25
+breakfast_box 90.8 82.18
+juice_bottle 88.24 79.72
+pushpins 79.18 52.85
+screw_bag 74.46 47.37
+splicing_connectors 81.02 45.08
+done

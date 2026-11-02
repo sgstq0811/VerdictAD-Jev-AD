@@ -1,0 +1,36 @@
+== image
+MVTec exponent 0.0: Image AUROC 97.68  Image AUPR 98.61  (15 classes)
+MVTec exponent 0.5: Image AUROC 98.89  Image AUPR 99.50  (15 classes)
+== pixel gamma 0
+bottle 98.84 95.98
+cable 94.07 88.8
+capsule 98.83 97.83
+carpet 99.0 97.95
+grid 99.43 97.27
+hazelnut 99.62 98.3
+leather 99.04 97.46
+metal_nut 97.46 94.99
+pill 96.87 97.5
+screw 98.86 95.26
+tile 95.23 86.91
+toothbrush 99.2 96.44
+transistor 91.26 72.88
+wood 93.77 94.44
+zipper 96.4 90.0
+== pixel gamma 0.25
+bottle 98.94 95.78
+cable 94.78 89.38
+capsule 98.85 97.81
+carpet 99.19 98.15
+grid 99.3 96.74
+hazelnut 99.64 98.3
+leather 99.0 97.56
+metal_nut 97.16 95.42
+pill 98.17 97.61
+screw 98.95 95.3
+tile 95.7 88.17
+toothbrush 99.1 95.9
+transistor 92.66 80.15
+wood 94.64 94.27
+zipper 96.7 90.18
+done

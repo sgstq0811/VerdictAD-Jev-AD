@@ -1,0 +1,78 @@
+diff --git a/main.py b/main.py
+index f92c5d2..2ee02bb 100644
+--- a/main.py
++++ b/main.py
+@@ -185,7 +185,7 @@ def compute_aupro(
+         fprs_s = np.concatenate([fprs_s, [fpr_limit]])
+         pros_s = np.concatenate([pros_s, [pros_s[-1]]])
+ 
+-    aupro = np.trapz(pros_s, fprs_s) / fpr_limit
++    aupro = np.trapezoid(pros_s, fprs_s) / fpr_limit
+     return float(aupro)
+ 
+ 
+@@ -330,6 +330,9 @@ def main():
+                     logging.info(
+                         f"  K-Shot image {i + 1}/{args.k_shot}: {Path(path).name}"
+                     )
++                import json as _json
++                os.makedirs(args.outdir, exist_ok=True)
++                _json.dump([str(q) for q in train_paths], open(os.path.join(args.outdir, f"refs_{category}.json"), "w"))
+ 
+         # 1. Fit PCA Model
+         if args.patch_size:
+@@ -1285,6 +1288,12 @@ def main():
+                 )
+             else:
+                 logging.info(f"Avg. time per batch: {np.mean(times_arr):.6f} s")
++        np.savez(os.path.join(args.outdir, f"imgmaps_{category}.npz"), maps=np.stack(pro_anomaly_maps).astype(np.float16),
++                 gts=np.stack(pro_gt_masks).astype(np.uint8), paths=np.array([str(q) for q in test_paths]))
++        import json as _json
++        os.makedirs(args.outdir, exist_ok=True)
++        _json.dump({"paths": [str(q) for q in test_paths], "img_true": [int(x) for x in img_true], "img_pred": [float(x) for x in img_pred_auroc]},
++                   open(os.path.join(args.outdir, f"imgscores_{category}.json"), "w"))
+         img_auroc = (
+             roc_auc_score(img_true, img_pred_auroc)
+             if len(np.unique(img_true)) > 1
+--- a/src/subspacead/core/extractor.py	2026-10-25 21:42:18.007426132 +0800
++++ b/src/subspacead/core/extractor.py	2026-10-29 04:54:35.969422352 +0800
+@@ -1,3 +1,4 @@
++import os
+ import logging
+ import torch
+ from transformers import AutoImageProcessor, AutoModel
+@@ -14,7 +15,7 @@
+     def __init__(self, model_ckpt: str):
+         logging.info(f"Loading feature extraction model: {model_ckpt}...")
+         self.processor = AutoImageProcessor.from_pretrained(model_ckpt)
+-        self.model = AutoModel.from_pretrained(model_ckpt).eval().to(DEVICE)
++        self.model = AutoModel.from_pretrained(model_ckpt, attn_implementation=os.environ.get("SUB_ATTN", "eager")).eval().to(DEVICE)
+         try:
+             self.model.set_attn_implementation("eager")
+             logging.info("Set model attention implementation to 'eager'.")
+@@ -176,13 +177,14 @@
+         ).to(DEVICE)
+ 
+         # 2. Model Inference
++        _need_att = os.environ.get("SUB_NO_ATTN", "0") != "1"  # attention maps are only used by the dino_saliency background mask
+         outputs = self.model(
+-            **inputs, output_hidden_states=True, output_attentions=True
++            **inputs, output_hidden_states=True, output_attentions=_need_att
+         )
+         hidden_states = outputs.hidden_states
+         attentions = outputs.attentions
+ 
+-        if attentions is None:
++        if attentions is None and _need_att:
+             raise ValueError(
+                 "Attention weights are None. Model may be using Flash Attention. "
+                 "Check transformers version or model compatibility."
+@@ -198,7 +200,7 @@
+         batch_size = inputs.pixel_values.shape[0]
+ 
+         # 4. Saliency Mask Extraction
+-        saliency_mask = self._get_saliency_mask(
++        saliency_mask = None if not _need_att else self._get_saliency_mask(
+             attentions,
+             dino_saliency_layer,
+             num_reg,

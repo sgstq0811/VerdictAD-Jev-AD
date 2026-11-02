@@ -1,0 +1,30 @@
+== image
+VisA exponent 0.0: Image AUROC 90.76  Image AUPR 91.90  (12 classes)
+VisA exponent 0.5: Image AUROC 95.28  Image AUPR 95.89  (12 classes)
+== pixel gamma 0
+candle 98.8 96.45
+capsules 94.44 94.45
+cashew 99.34 97.62
+chewinggum 99.49 92.69
+fryum 96.38 93.57
+macaroni1 99.3 98.45
+macaroni2 97.6 90.63
+pcb1 98.98 91.19
+pcb2 95.66 90.1
+pcb3 96.95 90.42
+pcb4 95.31 83.8
+pipe_fryum 98.94 97.31
+== pixel gamma 0.25
+candle 99.01 98.06
+capsules 94.86 94.64
+cashew 99.56 97.29
+chewinggum 99.45 92.1
+fryum 96.82 93.58
+macaroni1 99.46 98.65
+macaroni2 97.75 91.37
+pcb1 99.1 92.87
+pcb2 95.89 91.17
+pcb3 97.41 91.45
+pcb4 97.07 89.58
+pipe_fryum 98.97 97.4
+done

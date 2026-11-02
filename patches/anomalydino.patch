@@ -1,0 +1,26 @@
+diff --git a/src/detection.py b/src/detection.py
+index 4989a10..2b2be8a 100644
+--- a/src/detection.py
++++ b/src/detection.py
+@@ -74,6 +74,8 @@ def run_anomaly_detection(
+     else:
+         # few-shot setting, pick samples in deterministic fashion according to seed
+         img_ref_samples = sorted(os.listdir(img_ref_folder))[seed*n_ref_samples:(seed + 1)*n_ref_samples]
++        if os.environ.get("AD_REFS_DIR"):   # references of a SubspaceAD run (refs_<object>.json), same four images for every detector
++            import json; img_ref_samples = [os.path.basename(r) for r in json.load(open(os.environ["AD_REFS_DIR"] + f"/refs_{object_name}.json"))[:n_ref_samples]]
+ 
+     if len(img_ref_samples) < n_ref_samples:
+         print(f"Warning: Not enough reference samples for {object_name}! Only {len(img_ref_samples)} samples available.")
+diff --git a/src/post_eval.py b/src/post_eval.py
+index 78ddb08..c2d4a67 100644
+--- a/src/post_eval.py
++++ b/src/post_eval.py
+@@ -415,7 +415,7 @@ def get_objects_from_dataset(dataset):
+     return objects
+     
+ 
+-def eval_finished_run(dataset, dataset_base_dir, anomaly_maps_dir, output_dir, seed = None, pro_integration_limit = 0.3, eval_clf = True, eval_segm = False, delete_tiff_files = True, aggregation_statistics = "meantop1p"):
++def eval_finished_run(dataset, dataset_base_dir, anomaly_maps_dir, output_dir, seed = None, pro_integration_limit = 0.3, eval_clf = True, eval_segm = False, delete_tiff_files = False, aggregation_statistics = "meantop1p"):
+     """
+     Evaluate the results of a finished run on the MVTec AD dataset.
+     Arguments:
