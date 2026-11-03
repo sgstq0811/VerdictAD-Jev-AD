@@ -2,7 +2,7 @@
 
 # VerdictAD: Few-Shot Anomaly Detection via Decision-Guided Refinement
 
-[![Paper](https://img.shields.io/badge/Paper-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white)](VerdictAD.pdf)
+[![arXiv](https://img.shields.io/badge/arXiv-2611.02654-b31b1b?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2611.02654)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-VerdictAD-ffd21e)](https://huggingface.co/datasets/sunsean/VerdictAD)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](requirements.txt)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.11-EE4C2C?logo=pytorch&logoColor=white)](requirements.txt)
@@ -21,6 +21,7 @@ Detecting defects in real-world industrial inspection often requires learning fr
 
 ## 🚀 News
 
+- **2026.11** Paper on [arXiv](https://arxiv.org/abs/2611.02654).
 - **2026.11** Code, experiment logs and [decision cache](https://huggingface.co/datasets/sunsean/VerdictAD) released.
 
 ## 📊 Results
@@ -102,7 +103,7 @@ bash anomalydino/run.sh /path/to/AnomalyDINO MVTec data/mvtec_anomaly_detection 
 @article{sun2026verdictad,
   title   = {VerdictAD: Few-Shot Anomaly Detection via Decision-Guided Refinement},
   author  = {Sun, Shangquan and Luo, Wenjun and Wang, Yuanzhi and Li, Ruiqi and Chen, Ruoyu and Liu, Jiachen and Lu, Shijian},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2611.02654},
   year    = {2026}
 }
 ```
