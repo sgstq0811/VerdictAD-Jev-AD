@@ -1,9 +1,10 @@
 """Score a detector run with and without VerdictAD.
 
 Image AUROC / Image AUPR on s (detector) and S = s * sigmoid((z_free + z_ref) / 2) ** alpha;
-Pixel AUROC / AUPRO on M (detector map) and M' = M * W, W = window weights with exponent gamma.  AUPRO is SubspaceAD's compute_aupro (FPR limit 0.3).
+Pixel AUROC / AUPRO on M (detector map) and M' = M * W, W = window weights with exponent gamma.  AUPRO is SubspaceAD's compute_aupro
+(FPR limit 0.3; --fpr_limit 0.05 gives the AU-PRO_0.05 of MVTec AD 2).
 
-usage: python evaluate.py RUN_DIR DECISION_DIR (decide.py output, <cls>.pkl, or the released <cls>.json) --subspacead PATH [--alpha 0.5] [--gamma 0.25] [--windows merged|crop|box]"""
+usage: python evaluate.py RUN_DIR DECISION_DIR (decide.py output, <cls>.pkl, or the released <cls>.json) --subspacead PATH [--alpha 0.5] [--gamma 0.25] [--windows merged|crop|box] [--fpr_limit 0.3]"""
 import argparse, glob, json, os, pickle, sys
 import numpy as np
 from sklearn.metrics import roc_auc_score, average_precision_score
@@ -12,10 +13,10 @@ from verdictad import gate_score, apply_windows
 p = argparse.ArgumentParser()
 p.add_argument("run_dir"); p.add_argument("decision_dir"); p.add_argument("--subspacead", required=True)
 p.add_argument("--alpha", type=float, default=0.5); p.add_argument("--gamma", type=float, default=0.25)
-p.add_argument("--windows", default="merged", choices=["merged", "crop", "box"]); p.add_argument("--classes", default="")
+p.add_argument("--windows", default="merged", choices=["merged", "crop", "box"]); p.add_argument("--classes", default=""); p.add_argument("--fpr_limit", type=float, default=0.3)
 a = p.parse_args()
 sys.path.insert(0, a.subspacead); from main import compute_aupro
-aupro = lambda m, g: compute_aupro(list(m), list(g), fpr_limit=0.3, num_thresholds=300, connectivity=8)
+aupro = lambda m, g: compute_aupro(list(m), list(g), fpr_limit=a.fpr_limit, num_thresholds=300, connectivity=8)
 key = lambda q: "/".join(str(q).replace("\\", "/").split("/")[-4:])
 win = {"merged": slice(0, 32), "crop": slice(0, 16), "box": slice(16, 32)}[a.windows]
 

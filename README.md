@@ -21,6 +21,7 @@ Detecting defects in real-world industrial inspection often requires learning fr
 
 ## 🚀 News
 
+- **2026.11** AU-sPRO on the official MVTec LOCO AD release, MVTec AD 2 results, submission and visualization tools.
 - **2026.11** Paper on [arXiv](https://arxiv.org/abs/2611.02654).
 - **2026.11** Code, experiment logs and [decision cache](https://huggingface.co/datasets/sunsean/VerdictAD) released.
 
@@ -41,6 +42,28 @@ Detecting defects in real-world industrial inspection often requires learning fr
 
 The 1-shot and 2-shot tables, Image AUPR, and every per-seed, per-class result are in [`logs/`](logs). `python tools/summarize_logs.py` rebuilds all tables from them.
 
+**MVTec LOCO AD, AU-sPRO.** Official sPRO metric of MVTec LOCO AD, computed with MVTec's evaluation code on the original release (4-shot, seed 42, class mean, FPR limit 0.05 / 0.3). Each cell: logical / structural / mean (%).
+
+| Detector | AU-sPRO@0.05 | AU-sPRO@0.3 |
+|---|:-:|:-:|
+| PatchCore | 47.6 / 66.9 / 57.3 | 77.3 / 88.7 / 83.0 |
+| **+ VerdictAD** | **51.2 / 67.1 / 59.1** | **82.1 / 89.1 / 85.6** |
+| DINOv2-L | 42.2 / 69.9 / 56.0 | 77.8 / 87.1 / 82.4 |
+| **+ VerdictAD** | **48.7 / 72.0 / 60.3** | **81.3 / 88.7 / 85.0** |
+| AnomalyDINO | 45.1 / 64.8 / 54.9 | 77.4 / 85.1 / 81.3 |
+| **+ VerdictAD** | **46.1 / 65.8 / 56.0** | **78.4 / 86.1 / 82.2** |
+| SubspaceAD | 41.9 / 75.5 / 58.7 | 78.6 / 89.6 / 84.1 |
+| **+ VerdictAD** | **44.5 / 75.9 / 60.2** | **80.5 / 90.1 / 85.3** |
+
+**MVTec AD 2, public test split.** SubspaceAD 4-shot, seed 42, all VerdictAD settings unchanged; metrics on the 672 px maps.
+
+| | Image AUROC | Image AUPR | Pixel AUROC | AU-PRO@0.3 | AU-PRO@0.05 |
+|---|:-:|:-:|:-:|:-:|:-:|
+| SubspaceAD | 68.2 | 78.1 | 90.8 | **64.9** | 40.0 |
+| **+ VerdictAD** | **71.7** | **80.7** | **90.9** | 64.7 | **40.2** |
+
+Per-object and per-class values are in [`logs/loco_spro`](logs/loco_spro) and [`logs/mvtec_ad2`](logs/mvtec_ad2).
+
 ## ⚙️ Installation
 
 ```bash
@@ -58,6 +81,7 @@ The patch makes SubspaceAD save its anomaly maps, image scores and sampled refer
 | MVTec AD | [mvtec.com](https://www.mvtec.com/company/research/datasets/mvtec-ad) | as released |
 | VisA | [spot-diff](https://github.com/amazon-science/spot-diff) | 1-class split (`split_csv/1cls.csv`) |
 | MVTec LOCO AD | [mvtec.com](https://www.mvtec.com/company/research/datasets/mvtec-loco) | `python tools/prepare_loco.py <loco_root> data/loco` |
+| MVTec AD 2 | [mvtec.com](https://www.mvtec.com/company/research/datasets/mvtec-ad-2) | `python tools/prepare_mvtec_ad2.py <ad2_root> data/ad2 [--split ...]` |
 
 ## 🛠️ Usage
 
@@ -95,6 +119,30 @@ The decisions depend only on the query and its references, so one `decide.py` ou
 
 ```bash
 bash anomalydino/run.sh /path/to/AnomalyDINO MVTec data/mvtec_anomaly_detection 4 42 $RUN runs/jev_mvtec_k4_s42
+```
+
+**AU-sPRO on MVTec LOCO AD.** Download MVTec's evaluation code from the [MVTec LOCO AD page](https://www.mvtec.com/company/research/datasets/mvtec-loco) and pass the original release (not `data/loco`):
+
+```bash
+python tools/loco_spro.py $RUN /path/to/mvtec_loco_anomaly_detection /path/to/mvtec_loco_ad_evaluation runs/spro_loco --decisions runs/jev_loco_k4_s42
+```
+
+The script writes the maps of the detector and of VerdictAD as TIFF at the original resolution, runs MVTec's `evaluate_experiment.py` per object and deletes the TIFFs afterwards. `--anomalydino <maps_dir>` scores AnomalyDINO's saved maps instead of `$RUN`'s.
+
+**MVTec AD 2.** Lay out each split, run SubspaceAD and `decide.py` on it as above, and score the public test split; `--fpr_limit 0.05` gives the benchmark's AU-PRO:
+
+```bash
+python tools/prepare_mvtec_ad2.py /path/to/mvtec_ad_2 data/ad2                      # test_public; repeat with --split validation / test_private / test_private_mixed
+python evaluate.py $RUN runs/jev_ad2_k4_s42 --subspacead SubspaceAD --fpr_limit 0.05
+python tools/mvtec_ad2_submission.py runs/ad2_submission --val $RUN_VAL $DEC_VAL --private $RUN_PRIV $DEC_PRIV --mixed $RUN_MIX $DEC_MIX
+```
+
+The submission script thresholds every class at the mean + 3 std of the validation scores and writes the `anomaly_images` and `anomaly_images_thresholded` folders for the detector and for VerdictAD.
+
+**Visualization.** Qualitative panels in the style of PromptAD (400 px, Gaussian σ = 4, JET blended 0.5 / 0.5, ground truth in red), with class-wise and per-image normalization and a segmentation at half of each map's range:
+
+```bash
+python tools/visualize.py $RUN runs/jev_loco_k4_s42 runs/vis pushpins bad/pushpins_structural_anomalies_063.png
 ```
 
 ## 📣 Citation
